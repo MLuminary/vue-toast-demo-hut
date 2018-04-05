@@ -22,7 +22,11 @@
     el:'#app',
     methods:{
       toast:function(){
-        this.$toast.show("你好，Toast")
+        this.$toast.show("你好，Toast",{
+          duration:3000
+        },function(){
+          alert("回调函数")
+        })
       }
     }
   })

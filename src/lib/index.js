@@ -10,10 +10,15 @@ Toast.install =  function(Vue,options){
   //用户自定义选项替换默认选项
   Object.assign(opt, options);
   //在原型上扩展 toast 函数
-  Vue.prototype.$toast = function(message, option){
+  Vue.prototype.$toast = function(message, option, callback){
 
-    //用户自定义选项替换默认选项
-    Object.assign(opt, option);
+    //option必须存在且为对象
+    if(option&&Object.prototype.toString.call(option)){
+      //用户自定义选项替换默认选项
+      Object.assign(opt, option);
+    }else{
+      throw new Error("option is needed and it must be object");
+    }
   
     //创建一个子类 ToastController，继承自 ToastComponet
     const ToastController = Vue.extend(ToastComponet);
@@ -33,6 +38,7 @@ Toast.install =  function(Vue,options){
       //为了让淡出有效果
       setTimeout(()=>{
         document.body.removeChild(instance.$el);
+        callback && callback();
       },300)
     },opt.duration)
 
@@ -40,8 +46,8 @@ Toast.install =  function(Vue,options){
   }
 
   //类似与重定向 
-  Vue.prototype.$toast['show'] = function(message, option) {
-    Vue.prototype.$toast(message,option)
+  Vue.prototype.$toast['show'] = function(message, option, callback) {
+    Vue.prototype.$toast(message,option,callback)
   }
 }
 
